@@ -1,0 +1,119 @@
+DROP DATABASE IF EXISTS Water_sport;
+
+CREATE DATABASE Water_sport;
+
+USE Water_sport;
+
+
+
+CREATE TABLE lokacija (
+id INTEGER PRIMARY KEY NOT NULL,
+ime_lokacije VARCHAR(30) NOT NULL,
+adresa VARCHAR(30) NOT NULL,
+grad VARCHAR(30) NOT NULL,
+drzava VARCHAR(30) NOT NULL,
+postanski_broj VARCHAR(10) NOT NULL
+);
+
+CREATE TABLE radno_vrijeme (
+id INTEGER PRIMARY KEY NOT NULL,
+dan_u_tjednu DATE NOT NULL,
+vrijeme_otvaranja TIME NOT NULL,
+vrijeme_zatvaranja TIME NOT NULL,
+/*
+id_lokacija INTEGER NOT NULL, -- je ovo potrebno?
+*/
+FOREIGN KEY (id_rezervacija) REFERENCES rezervacija(id),
+FOREIGN KEY (id_lokacija) REFERENCES lokacija(id)
+);
+-- Podaci za prvu lokaciju
+INSERT INTO lokacija (ime_lokacije, adresa, grad, drzava, postanski_broj)
+VALUES ('Rivarela', 'Livada ulica 13', 'Novigrad', 'Hrvatska', '52466'); /*moguce promjene*/
+
+-- Podaci za drugu lokaciju
+INSERT INTO lokacija (ime_lokacije, adresa, grad, drzava, postanski_broj)
+VALUES ('Lanterna', 'Delfin beach', 'Tar', 'Hrvatska', '52465');
+
+-- Podaci za trecu lokaciju
+INSERT INTO lokacija (ime_lokacije, adresa, grad, drzava, postanski_broj)
+VALUES ('Maestral', 'Terre 6', 'Novigrad', 'Hrvatska', '52466');
+
+-- Podaci za cetvrtu lokaciju
+INSERT INTO lokacija (ime_lokacije, adresa, grad, drzava, postanski_broj)
+VALUES ('Lanterna', 'Lanterna 6', 'Tar', 'Hrvatska', '52465');
+
+-- Podaci za petu lokaciju
+INSERT INTO lokacija (ime_lokacije, adresa, grad, drzava, postanski_broj)
+VALUES ('Stella Maris', 'Savudrijska cesta bb', 'Monterol', 'Hrvatska', '52470');
+
+-- Radno vrijeme za prvu lokaciju (počinje u 10 i završava u 20)
+INSERT INTO radno_vrijeme (dan_u_tjednu, vrijeme_otvaranja, vrijeme_zatvaranja, id_lokacija)
+VALUES ('Ponedjeljak', '10:00:00', '20:00:00', 1),
+       ('Utorak', '10:00:00', '20:00:00', 1),
+       ('Srijeda', '10:00:00', '20:00:00', 1),
+       ('Četvrtak', '10:00:00', '20:00:00', 1),
+       ('Petak', '10:00:00', '20:00:00', 1),
+       ('Subota', '10:00:00', '20:00:00', 1),
+       ('Nedjelja', '10:00:00', '20:00:00', 1);
+
+-- Radno vrijeme za drugu lokaciju (počinje u 11 i završava u 19)
+INSERT INTO radno_vrijeme (dan_u_tjednu, vrijeme_otvaranja, vrijeme_zatvaranja, id_lokacija)
+VALUES ('Ponedjeljak', '11:00:00', '19:00:00', 2),
+       ('Utorak', '11:00:00', '19:00:00', 2),
+       ('Srijeda', '11:00:00', '19:00:00', 2),
+       ('Četvrtak', '11:00:00', '19:00:00', 2),
+       ('Petak', '11:00:00', '19:00:00', 2),
+       ('Subota', '11:00:00', '19:00:00', 2),
+       ('Nedjelja', '11:00:00', '19:00:00', 2);
+
+-- Radno vrijeme za trecu lokaciju (počinje u 9 i završava u 18i 20)
+INSERT INTO radno_vrijeme (dan_u_tjednu, vrijeme_otvaranja, vrijeme_zatvaranja, id_lokacija)
+VALUES ('Ponedjeljak', '09:00:00', '18:00:00', 3),
+       ('Utorak', '09:00:00', '18:00:00', 3),
+       ('Srijeda', '09:00:00', '18:00:00', 3),
+       ('Četvrtak', '09:00:00', '18:00:00', 3),
+       ('Petak', '09:00:00', '20:00:00', 3),
+       ('Subota', '09:00:00', '20:00:00', 3),
+       ('Nedjelja', '09:00:00', '18:00:00', 3);
+
+-- Radno vrijeme za cetvrtu lokaciju (počinje u 11 i završava u 19)
+INSERT INTO radno_vrijeme (dan_u_tjednu, vrijeme_otvaranja, vrijeme_zatvaranja, id_lokacija)
+VALUES ('Ponedjeljak', '08:00:00', '17:00:00', 4),
+       ('Utorak', '08:00:00', '17:00:00', 4),
+       ('Srijeda', '08:00:00', '17:00:00', 4),
+       ('Četvrtak', '08:00:00', '17:00:00', 4),
+       ('Petak', '08:00:00', '19:00:00', 4),
+       ('Subota', '08:00:00', '19:00:00', 4),
+       ('Nedjelja', '08:00:00', '17:00:00', 4);
+
+-- Radno vrijeme za petu lokaciju (počinje u 8 i završava u 18)
+INSERT INTO radno_vrijeme (dan_u_tjednu, vrijeme_otvaranja, vrijeme_zatvaranja, id_lokacija)
+VALUES ('Ponedjeljak', '08:00:00', '18:00:00', 5),
+       ('Utorak', '08:00:00', '18:00:00', 5),
+       ('Srijeda', '08:00:00', '18:00:00', 5),
+       ('Četvrtak', '08:00:00', '18:00:00', 5),
+       ('Petak', '08:00:00', '18:00:00', 5),
+       ('Subota', '08:00:00', '18:00:00', 5),
+       ('Nedjelja', '08:00:00', '18:00:00', 5);
+
+-- 1. DOHVAĆANJE RADNOG VREMENA ZA SVAKU LOKACIJU:
+	SELECT lokacija.ime_lokacije, radno_vrijeme.dan_u_tjednu, radno_vrijeme.vrijeme_otvaranja, radno_vrijeme.vrijeme_zatvaranja
+FROM lokacija
+JOIN radno_vrijeme ON lokacija.id = radno_vrijeme.id_lokacija;
+
+-- 2. DOHVAĆANJE LOKACIJA KOJE SE NALAZE U NOVIGRADU:
+SELECT * FROM lokacija WHERE grad = 'Novigrad';
+
+-- 3. DOHVAĆANJE LOKACIJA KOJE RADE NAJDUŽE U PONEDJELJAK:
+SELECT lokacija.ime_lokacije, radno_vrijeme.vrijeme_otvaranja, radno_vrijeme.vrijeme_zatvaranja
+FROM lokacija
+JOIN radno_vrijeme ON lokacija.id = radno_vrijeme.id_lokacija
+WHERE radno_vrijeme.dan_u_tjednu = 'Ponedjeljak'
+ORDER BY TIME_TO_SEC(TIMEDIFF(radno_vrijeme.vrijeme_zatvaranja, radno_vrijeme.vrijeme_otvaranja)) DESC
+LIMIT 1;
+
+-- 4. DOHVAĆANJE BROJA LOKACIJA KOJE IMAJU RADNO VRIJEME OD 9 DO 18 SATI:
+SELECT COUNT(*) AS broj_lokacija
+FROM lokacija
+JOIN radno_vrijeme ON lokacija.id = radno_vrijeme.id_lokacija
+WHERE radno_vrijeme.vrijeme_otvaranja = '09:00:00' AND radno_vrijeme.vrijeme_zatvaranja = '18:00:00';
